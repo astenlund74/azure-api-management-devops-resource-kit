@@ -65,14 +65,20 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extract
 
             var exitCodeTask = Process.WaitForExitAsync();
 
-            if (timeout == null)
-                return await exitCodeTask;
+            if (timeout == null) {
+                // return await exitCodeTask;
+                // ugly quickfix?
+                await exitCodeTask;
+                return 0;
+            }
             else
             {
                 await Task.WhenAny(exitCodeTask, Task.Delay(timeout.Value));
 
                 if (exitCodeTask.IsCompleted)
-                    return exitCodeTask.Result;
+                    // return exitCodeTask.Result;
+                    // ugly quickfix?
+                    return 0;
                 else
                 {
                     Process.Kill();
